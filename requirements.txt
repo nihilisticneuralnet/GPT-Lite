@@ -1,1 +1,4 @@
-julia
+Packages:
+CUDA
+Flux
+Random
