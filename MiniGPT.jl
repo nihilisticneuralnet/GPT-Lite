@@ -15,7 +15,6 @@ using Flux
 using Flux: @epochs, onehotbatch, mse, throttle
 using CUDA
 
-# hyperparameters
 batch_size = 64
 block_size = 256
 max_iters = 5000
@@ -31,7 +30,6 @@ dropout = 0.2
 import Random
 Random.seed!(1337)
 
-# Read the input text file
 text = ""
 open("input.txt", "r") do f
     global text = read(f, String)
@@ -43,12 +41,11 @@ vocab_size = length(chars)
 stoi = Dict(ch => i for (i, ch) in enumerate(chars))
 itos = Dict(i => ch for (i, ch) in enumerate(chars))
 
-# Define encoding and decoding functions
 encode(s) = [stoi[c] for c in s]
 decode(l) = join([itos[i] for i in l])
 
 data = Int64.(encode(text))
-n = floor(Int, 0.9 * length(data))  # first 90% will be train, rest val
+n = floor(Int, 0.9 * length(data))  
 train_data = data[1:n]
 val_data = data[n+1:end]
 
@@ -255,11 +252,9 @@ end
 
 model = GPTLanguageModel()
 m = model |> device
-# print the number of parameters in the model
 params_count = sum(p -> length(Flux.params(p)), Flux.children(m)) / 1e6
 println("$(params_count) M parameters")
 
-# create a Flux optimizer
 optimizer = ADAMW(Flux.params(m), learning_rate)
 
 for iter in 1:max_iters
@@ -270,7 +265,6 @@ for iter in 1:max_iters
 
     xb, yb = get_batch("train")
 
-    # evaluate the loss
     logits, loss = model(xb, yb)
     Flux.reset!(optimizer)
     Flux.back!(loss)
