@@ -37,11 +37,9 @@ open("input.txt", "r") do f
     global text = read(f, String)
 end
 
-# Create a set of unique characters
 chars = sort(collect(Set(text)))
 vocab_size = length(chars)
 
-# Create mappings from characters to integers and vice versa
 stoi = Dict(ch => i for (i, ch) in enumerate(chars))
 itos = Dict(i => ch for (i, ch) in enumerate(chars))
 
@@ -49,7 +47,6 @@ itos = Dict(i => ch for (i, ch) in enumerate(chars))
 encode(s) = [stoi[c] for c in s]
 decode(l) = join([itos[i] for i in l])
 
-# Train and test splits
 data = Int64.(encode(text))
 n = floor(Int, 0.9 * length(data))  # first 90% will be train, rest val
 train_data = data[1:n]
