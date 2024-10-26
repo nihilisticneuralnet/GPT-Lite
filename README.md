@@ -1,1 +1,1 @@
-# miniGPT- Julia Implementation
+# GPT-Lite - Tensorflow 
