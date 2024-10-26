@@ -1,7 +1,6 @@
 import tensorflow as tf
 import numpy as np
 
-# hyperparameters
 batch_size = 64 # how many independent sequences will we process in parallel?
 block_size = 256 # what is the maximum context length for predictions?
 max_iters = 5000
@@ -19,8 +18,10 @@ tf.random.set_seed(1337)
 with open('/content/input.txt', 'r', encoding='utf-8') as f:
     text = f.read()
 
+# here are all the unique characters that occur in this text
 chars = sorted(list(set(text)))
 vocab_size = len(chars)
+# create a mapping from characters to integers
 stoi = {ch: i for i, ch in enumerate(chars)}
 itos = {i: ch for i, ch in enumerate(chars)}
 encode = lambda s: [stoi[c] for c in s]
@@ -50,7 +51,6 @@ class MultiHeadAttention(tf.keras.layers.Layer):
         self.key_dense = tf.keras.layers.Dense(num_heads * head_size, use_bias=False)
         self.query_dense = tf.keras.layers.Dense(num_heads * head_size, use_bias=False)
         self.value_dense = tf.keras.layers.Dense(num_heads * head_size, use_bias=False)
-        # Make sure output dimension matches input embedding size
         self.output_dense = tf.keras.layers.Dense(output_dim)
         self.dropout = tf.keras.layers.Dropout(dropout)
         self.tril = tf.constant(np.tril(np.ones((block_size, block_size))), dtype=tf.float32)
@@ -139,7 +139,6 @@ class GPTLanguageModel(tf.keras.Model):
             start_tokens = tf.concat([start_tokens, next_token], axis=-1)
         return start_tokens
 
-# Instantiate the model
 model = GPTLanguageModel()
 optimizer = tf.keras.optimizers.Adam(learning_rate)
 
@@ -152,17 +151,14 @@ def train_step(x, y):
     optimizer.apply_gradients(zip(gradients, model.trainable_variables))
     return loss
 
-# Training loop
 for iteration in range(max_iters):
     if iteration % eval_interval == 0:
-        # Evaluation step can be implemented similarly to the training step
         print(f"Step {iteration}: Training model...")
 
     x_batch, y_batch = get_batch('train')
     loss = train_step(x_batch, y_batch)
     print(f"Iteration {iteration}: Loss = {loss:.4f}")
 
-# Generate text
 start_tokens = tf.constant([[stoi[' ']]], dtype=tf.int32)
 generated = model.generate(start_tokens, max_new_tokens=500)
 print(decode(generated[0].numpy().tolist()))
