@@ -1,3 +1,10 @@
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/c77e5f3e-a1e8-4fcd-a364-bb42f8d025e9" >
+  <img src="https://github.com/user-attachments/assets/4c04464b-f532-4494-86df-10045c385834" >
+
+</p>
+  
 # GPT-Lite : Tensorflow 
 Tensorflow Implementation of the mini-version of [Transformer](https://arxiv.org/abs/1706.03762) architecture for Text Generation
 
